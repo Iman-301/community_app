@@ -3,16 +3,15 @@ const router = express.Router();
 const {
   createRequest,
   getAllRequests,
+  getUserRequests,
   updateStatus,
 } = require('../controllers/requestController');
+const { authenticate } = require('../middleware/auth');
+const { adminOnly } = require('../middleware/admin');
 
-// POST request from user
-router.post('/', createRequest);
-
-// GET all requests for admin
-router.get('/', getAllRequests);
-
-// PUT to approve or reject
-router.put('/:id', updateStatus);
+router.post('/', authenticate, createRequest);
+router.get('/', authenticate, adminOnly, getAllRequests);
+router.get('/my-requests', authenticate, getUserRequests);
+router.put('/:id', authenticate, adminOnly, updateStatus);
 
 module.exports = router;
