@@ -14,11 +14,20 @@ import 'announcement_page.dart' show AnnouncementPage;
 import 'package:iddir_app/add_announcement_page.dart';
 import 'package:iddir_app/financial_management_page.dart';
 import 'package:iddir_app/event_approval_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  final prefs = await SharedPreferences.getInstance();
+  
   runApp(
     ProviderScope(
-      child: MyApp(),
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+      ],
+      child: const MyApp(),
     ),
   );
 }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iddir_app/core/widgets/bottom_navbar.dart';
+import '../providers/auth_provider.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+
     return Scaffold(
       body: Stack(
         clipBehavior: Clip.none,
@@ -26,9 +30,7 @@ class ProfilePage extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.grey,
                     image: DecorationImage(
-                      image: AssetImage(
-                        'assets/profile.jpg',
-                      ), // Replace with your image
+                      image: AssetImage('assets/images/profile.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -54,41 +56,54 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
 
-          // Name and phone number
+          // Name and email
           Positioned(
             top: 240,
             left: 0,
             right: 0,
             child: Column(
-              children: const [
-                Text(
-                  'John Doe',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                    height: 28 / 22,
-                    letterSpacing: 0,
-                    color: Colors.black,
-                    textBaseline: TextBaseline.alphabetic,
-                  ),
-                  textAlign: TextAlign.center,
+              children: [
+                authState.when(
+                  data:
+                      (user) => Column(
+                        children: [
+                          Text(
+                            user?.name ?? 'Not logged in',
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 22,
+                              height: 28 / 22,
+                              letterSpacing: 0,
+                              color: Colors.black,
+                              textBaseline: TextBaseline.alphabetic,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            user?.email ?? '',
+                            style: const TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              height: 20 / 14,
+                              letterSpacing: 0.25,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                  loading: () => const CircularProgressIndicator(),
+                  error:
+                      (error, stack) => const Text(
+                        'Error loading profile',
+                        style: TextStyle(color: Colors.red),
+                      ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  '+251900000000',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    height: 20 / 14,
-                    letterSpacing: 0.25,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                SettingsContainer(),
+                const SizedBox(height: 20),
+                const SettingsContainer(),
               ],
             ),
           ),
@@ -112,10 +127,15 @@ class CurvedHeader extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 50, left: 16),
           child: Row(
-            children: const [
-              Icon(Icons.arrow_back, color: Colors.black, size: 28),
-              SizedBox(width: 12),
-              Text(
+            children: [
+              GestureDetector(
+                child: Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                onTap: () {
+                  Navigator.pushNamed(context, '/announcement');
+                },
+              ),
+              const SizedBox(width: 12),
+              const Text(
                 'Profile',
                 style: TextStyle(
                   fontFamily: 'Instrument Sans',
@@ -212,7 +232,6 @@ class SettingsContainer extends StatelessWidget {
                   ),
                 ],
               ),
-             
             ],
           ),
           const SizedBox(height: 20),
@@ -234,9 +253,9 @@ class SettingsContainer extends StatelessWidget {
               ),
             ],
           ),
-SizedBox(height: 20),
+          SizedBox(height: 20),
 
-           Row(
+          Row(
             children: const [
               Icon(Icons.edit, color: Colors.black),
               SizedBox(width: 12),
@@ -257,4 +276,3 @@ SizedBox(height: 20),
     );
   }
 }
-
