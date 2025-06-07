@@ -27,6 +27,23 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
+  },
+    profilePicture: {
+    type: String,
+    default: null
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['unpaid', 'pending', 'paid'],
+    default: 'unpaid'
+  },
+  paymentReceipt: {
+    type: String,
+    default: null
+  },
+  paymentApprovedAt: {
+    type: Date,
+    default: null
   }
 }, { timestamps: true });
 

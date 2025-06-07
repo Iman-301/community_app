@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'public'))); 
 
-// Connect to DB
+// Connect to DB3
 connectDB();
 
 // Create admin user if not exists (run once)
@@ -41,6 +41,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/requests', require('./routes/requestRoutes'));
 app.use('/api/announcements', require('./routes/announcementRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes')); 
+app.use('/api/profile', require('./routes/profileRoutes'));
 
 // Server
 const PORT = process.env.PORT || 5000;
