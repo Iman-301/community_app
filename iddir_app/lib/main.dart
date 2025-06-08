@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iddir_app/admin_announcements_page.dart';
-import 'package:iddir_app/features/auth/presentation/screens/profile_page.dart';
+import 'package:iddir_app/features/profile/presentation/screens/profile_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signin_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signup_page.dart';
+import 'package:iddir_app/features/profile/presentation/screens/profile_form_page.dart';
 import 'package:iddir_app/member_management_detail_page.dart';
 import 'package:iddir_app/onboarding_page.dart';
 import 'package:iddir_app/otp_verification_page.dart';
-import 'package:iddir_app/profile_form_page.dart';
 import 'package:iddir_app/service_request_page.dart';
 import 'package:iddir_app/splash_screen.dart';
 import 'announcement_page.dart' show AnnouncementPage;
@@ -15,7 +15,8 @@ import 'package:iddir_app/add_announcement_page.dart';
 import 'package:iddir_app/financial_management_page.dart';
 import 'package:iddir_app/event_approval_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart' as auth;
+import 'package:iddir_app/features/profile/presentation/providers/profile_provider.dart' as profile;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,8 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
+        auth.sharedPreferencesProvider.overrideWithValue(prefs),
+        profile.sharedPreferencesProvider.overrideWithValue(prefs),
       ],
       child: const MyApp(),
     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iddir_app/core/widgets/button.dart';
 import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:iddir_app/features/profile/presentation/providers/profile_provider.dart';
 import '../../data/models/user_model.dart';
 
 class SigninPage extends ConsumerStatefulWidget {
@@ -17,21 +18,34 @@ class _SigninPageState extends ConsumerState<SigninPage> {
 
   bool _passwordVisible = false;
 
+  void _handleNavigation(UserModel user) {
+    // Initialize profile
+    ref.read(profileProvider.notifier).initializeProfile();
+    
+    // Clear form
+    _emailController.clear();
+    _passwordController.clear();
+
+    // Navigate based on role
+    if (user.role == 'admin') {
+      Navigator.pushReplacementNamed(context, '/admin-announcement');
+    } else {
+      Navigator.pushReplacementNamed(context, '/announcement');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
     ref.listen<AsyncValue<UserModel?>>(authProvider, (previous, next) {
       if (next is AsyncData && next.value != null) {
-        // On successful login, navigate to /announcement
-        _emailController.clear();
-        _passwordController.clear();
-        Navigator.pushReplacementNamed(context, '/announcement');
+        _handleNavigation(next.value!);
       }
       if (next.hasError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error.toString())),
+        );
       }
     });
 

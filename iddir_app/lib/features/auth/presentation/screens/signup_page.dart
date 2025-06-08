@@ -22,25 +22,35 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
 
+  void _handleNavigation(UserModel user) {
+    // Clear form
+    _nameController.clear();
+    _emailController.clear();
+    _addressController.clear();
+    _phoneController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+
+    // Navigate based on role
+    if (user.role == 'admin') {
+      Navigator.pushReplacementNamed(context, '/admin-announcement');
+    } else {
+      Navigator.pushReplacementNamed(context, '/announcement');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
     ref.listen<AsyncValue<UserModel?>>(authProvider, (previous, next) {
       if (next is AsyncData && next.value != null) {
-        // Navigate without resetting provider
-        _nameController.clear();
-        _emailController.clear();
-        _addressController.clear();
-        _phoneController.clear();
-        _passwordController.clear();
-        _confirmPasswordController.clear();
-        Navigator.pushReplacementNamed(context, '/signin');
+        _handleNavigation(next.value!);
       }
       if (next.hasError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error.toString())),
+        );
       }
     });
 
