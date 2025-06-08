@@ -192,7 +192,7 @@ class _ProfileFormPageState extends ConsumerState<ProfileFormPage> {
                         children: [
                           CustomButton(
                             label: 'Back',
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.pushNamed(context, '/profile'),
                             aspectRatioVal: 2,
                             border: true,
                             lablefont: 16,
@@ -230,20 +230,25 @@ class CurvedHeader extends StatelessWidget {
         color: const Color(0xFFEBF0F0), // Teal-ish color from image
         child: Padding(
           padding: const EdgeInsets.only(top: 50, left: 16),
-          child: Row(
-            children: [
-              const Icon(Icons.arrow_back, color: Colors.black, size: 28),
-              const SizedBox(width: 12),
-              const Text(
-                'Edit Profile',
-                style: TextStyle(
-                  fontFamily: 'Instrument Sans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24,
-                  color: Colors.black,
+          child: GestureDetector(
+            child: Row(
+              children: [
+                const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                const SizedBox(width: 12),
+                const Text(
+                  'Edit Profile',
+                  style: TextStyle(
+                    fontFamily: 'Instrument Sans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            onTap: (){
+              Navigator.pushNamed(context, '/profile');
+            },
           ),
         ),
       ),

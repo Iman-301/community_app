@@ -30,20 +30,33 @@ class ServiceRequestPage extends StatelessWidget {
               labelText: 'Amount:',
               placeholder: 'Amount requested..',
             ),
-           
 
             const SizedBox(height: 40),
 
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                      CustomButton(label: 'Back', onPressed: ()=>{}, aspectRatioVal: 2, border: true, lablefont: 16,),
-                      CustomButton(label: 'Submit', onPressed: ()=>{}, aspectRatioVal: 2, backgroundColor: const Color(0xFF08B9AF), lablefont: 16,) // Teal-ish color from image
-                  ],
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomButton(
+                    label: 'Back',
+                    onPressed: () => {
+                      Navigator.pushNamed(context, '/announcement'),
+                    },
+                    aspectRatioVal: 2,
+                    border: true,
+                    lablefont: 16,
+                  ),
+                  CustomButton(
+                    label: 'Submit',
+                    onPressed: () => {},
+                    aspectRatioVal: 2,
+                    backgroundColor: const Color(0xFF08B9AF),
+                    lablefont: 16,
+                  ), // Teal-ish color from image
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -63,20 +76,25 @@ class CurvedHeader extends StatelessWidget {
         color: const Color(0xFFEBF0F0), // Teal-ish color from image
         child: Padding(
           padding: const EdgeInsets.only(top: 50, left: 16),
-          child: Row(
-            children: [
-              const Icon(Icons.arrow_back, color: Colors.black, size: 28),
-              const SizedBox(width: 12),
-              const Text(
-                'Service Request',
-                style: TextStyle(
-                  fontFamily: 'Instrument Sans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24,
-                  color: Colors.black,
+          child: GestureDetector(
+            child: Row(
+              children: [
+                const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                const SizedBox(width: 12),
+                const Text(
+                  'Service Request',
+                  style: TextStyle(
+                    fontFamily: 'Instrument Sans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, '/announcement');
+            },
           ),
         ),
       ),

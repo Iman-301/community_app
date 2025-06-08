@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repositories/auth_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:iddir_app/core/providers/shared_preferences_provider.dart';
 
 // Dio provider
 final dioProvider = Provider<Dio>((ref) {
@@ -10,9 +11,9 @@ final dioProvider = Provider<Dio>((ref) {
 });
 
 // SharedPreferences provider
-final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
-  throw UnimplementedError('Initialize SharedPreferences before using');
-});
+// final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+//   throw UnimplementedError('Initialize SharedPreferences before using');
+// });
 
 // DO NOT redefine authRepositoryProvider! Use the generated one.
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:iddir_app/admin_announcements_page.dart';
+import 'package:iddir_app/features/announcement/presentation/screens/add_announcement_page.dart';
+import 'package:iddir_app/features/announcement/presentation/screens/admin_announcements_page.dart';
+import 'package:iddir_app/features/announcement/presentation/screens/announcement_page.dart';
 import 'package:iddir_app/features/profile/presentation/screens/profile_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signin_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signup_page.dart';
@@ -10,24 +12,22 @@ import 'package:iddir_app/onboarding_page.dart';
 import 'package:iddir_app/otp_verification_page.dart';
 import 'package:iddir_app/service_request_page.dart';
 import 'package:iddir_app/splash_screen.dart';
-import 'announcement_page.dart' show AnnouncementPage;
-import 'package:iddir_app/add_announcement_page.dart';
 import 'package:iddir_app/financial_management_page.dart';
 import 'package:iddir_app/event_approval_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart' as auth;
-import 'package:iddir_app/features/profile/presentation/providers/profile_provider.dart' as profile;
+import 'package:iddir_app/core/providers/shared_preferences_provider.dart';
+// import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart' as auth;
+// import 'package:iddir_app/features/announcement/presentation/providers/announcement_provider.dart' as announcement;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  final prefs = await SharedPreferences.getInstance();
+  final sharedPreferences = await SharedPreferences.getInstance();
   
   runApp(
     ProviderScope(
       overrides: [
-        auth.sharedPreferencesProvider.overrideWithValue(prefs),
-        profile.sharedPreferencesProvider.overrideWithValue(prefs),
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
       child: const MyApp(),
     ),
@@ -62,5 +62,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 

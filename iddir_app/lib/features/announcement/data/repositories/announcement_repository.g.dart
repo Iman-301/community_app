@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_repository.dart';
+part of 'announcement_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileRepositoryHash() => r'80c0c69fea2cae2869f1cb16c36d08f1bf75eb2a';
+String _$announcementRepositoryHash() =>
+    r'645a7173efbd0c00b3bbd7878bb1953db06d3a23';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,30 +30,31 @@ class _SystemHash {
   }
 }
 
-abstract class _$ProfileRepository
-    extends BuildlessAutoDisposeNotifier<ProfileRemoteDatasource> {
+abstract class _$AnnouncementRepository
+    extends BuildlessAutoDisposeNotifier<AnnouncementRemoteDatasource> {
   late final Dio dio;
 
-  ProfileRemoteDatasource build(Dio dio);
+  AnnouncementRemoteDatasource build(Dio dio);
 }
 
-/// See also [ProfileRepository].
-@ProviderFor(ProfileRepository)
-const profileRepositoryProvider = ProfileRepositoryFamily();
+/// See also [AnnouncementRepository].
+@ProviderFor(AnnouncementRepository)
+const announcementRepositoryProvider = AnnouncementRepositoryFamily();
 
-/// See also [ProfileRepository].
-class ProfileRepositoryFamily extends Family<ProfileRemoteDatasource> {
-  /// See also [ProfileRepository].
-  const ProfileRepositoryFamily();
+/// See also [AnnouncementRepository].
+class AnnouncementRepositoryFamily
+    extends Family<AnnouncementRemoteDatasource> {
+  /// See also [AnnouncementRepository].
+  const AnnouncementRepositoryFamily();
 
-  /// See also [ProfileRepository].
-  ProfileRepositoryProvider call(Dio dio) {
-    return ProfileRepositoryProvider(dio);
+  /// See also [AnnouncementRepository].
+  AnnouncementRepositoryProvider call(Dio dio) {
+    return AnnouncementRepositoryProvider(dio);
   }
 
   @override
-  ProfileRepositoryProvider getProviderOverride(
-    covariant ProfileRepositoryProvider provider,
+  AnnouncementRepositoryProvider getProviderOverride(
+    covariant AnnouncementRepositoryProvider provider,
   ) {
     return call(provider.dio);
   }
@@ -69,33 +71,33 @@ class ProfileRepositoryFamily extends Family<ProfileRemoteDatasource> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'profileRepositoryProvider';
+  String? get name => r'announcementRepositoryProvider';
 }
 
-/// See also [ProfileRepository].
-class ProfileRepositoryProvider
+/// See also [AnnouncementRepository].
+class AnnouncementRepositoryProvider
     extends
         AutoDisposeNotifierProviderImpl<
-          ProfileRepository,
-          ProfileRemoteDatasource
+          AnnouncementRepository,
+          AnnouncementRemoteDatasource
         > {
-  /// See also [ProfileRepository].
-  ProfileRepositoryProvider(Dio dio)
+  /// See also [AnnouncementRepository].
+  AnnouncementRepositoryProvider(Dio dio)
     : this._internal(
-        () => ProfileRepository()..dio = dio,
-        from: profileRepositoryProvider,
-        name: r'profileRepositoryProvider',
+        () => AnnouncementRepository()..dio = dio,
+        from: announcementRepositoryProvider,
+        name: r'announcementRepositoryProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
-                : _$profileRepositoryHash,
-        dependencies: ProfileRepositoryFamily._dependencies,
+                : _$announcementRepositoryHash,
+        dependencies: AnnouncementRepositoryFamily._dependencies,
         allTransitiveDependencies:
-            ProfileRepositoryFamily._allTransitiveDependencies,
+            AnnouncementRepositoryFamily._allTransitiveDependencies,
         dio: dio,
       );
 
-  ProfileRepositoryProvider._internal(
+  AnnouncementRepositoryProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -108,17 +110,17 @@ class ProfileRepositoryProvider
   final Dio dio;
 
   @override
-  ProfileRemoteDatasource runNotifierBuild(
-    covariant ProfileRepository notifier,
+  AnnouncementRemoteDatasource runNotifierBuild(
+    covariant AnnouncementRepository notifier,
   ) {
     return notifier.build(dio);
   }
 
   @override
-  Override overrideWith(ProfileRepository Function() create) {
+  Override overrideWith(AnnouncementRepository Function() create) {
     return ProviderOverride(
       origin: this,
-      override: ProfileRepositoryProvider._internal(
+      override: AnnouncementRepositoryProvider._internal(
         () => create()..dio = dio,
         from: from,
         name: null,
@@ -131,14 +133,17 @@ class ProfileRepositoryProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<ProfileRepository, ProfileRemoteDatasource>
+  AutoDisposeNotifierProviderElement<
+    AnnouncementRepository,
+    AnnouncementRemoteDatasource
+  >
   createElement() {
-    return _ProfileRepositoryProviderElement(this);
+    return _AnnouncementRepositoryProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ProfileRepositoryProvider && other.dio == dio;
+    return other is AnnouncementRepositoryProvider && other.dio == dio;
   }
 
   @override
@@ -152,23 +157,23 @@ class ProfileRepositoryProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ProfileRepositoryRef
-    on AutoDisposeNotifierProviderRef<ProfileRemoteDatasource> {
+mixin AnnouncementRepositoryRef
+    on AutoDisposeNotifierProviderRef<AnnouncementRemoteDatasource> {
   /// The parameter `dio` of this provider.
   Dio get dio;
 }
 
-class _ProfileRepositoryProviderElement
+class _AnnouncementRepositoryProviderElement
     extends
         AutoDisposeNotifierProviderElement<
-          ProfileRepository,
-          ProfileRemoteDatasource
+          AnnouncementRepository,
+          AnnouncementRemoteDatasource
         >
-    with ProfileRepositoryRef {
-  _ProfileRepositoryProviderElement(super.provider);
+    with AnnouncementRepositoryRef {
+  _AnnouncementRepositoryProviderElement(super.provider);
 
   @override
-  Dio get dio => (origin as ProfileRepositoryProvider).dio;
+  Dio get dio => (origin as AnnouncementRepositoryProvider).dio;
 }
 
 // ignore_for_file: type=lint

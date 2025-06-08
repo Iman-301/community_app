@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -5,6 +6,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? currentRoute = ModalRoute.of(context)?.settings.name;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
@@ -18,17 +20,32 @@ class CustomBottomNavBar extends StatelessWidget {
           NavItem(
             icon: Icons.announcement_outlined,
             label: 'Announcements',
-            onTap: () => Navigator.pushReplacementNamed(context, '/announcement'),
+            isActive: currentRoute == '/announcement',
+            onTap: () {
+              if (currentRoute != '/announcement') {
+                Navigator.pushReplacementNamed(context, '/announcement');
+              }
+            },
           ),
           NavItem(
             icon: Icons.send_outlined,
             label: 'Request',
-            onTap: () => Navigator.pushReplacementNamed(context, '/service-request'),
+            isActive: currentRoute == '/service-request',
+            onTap: () {
+              if (currentRoute != '/service-request') {
+                Navigator.pushReplacementNamed(context, '/service-request');
+              }
+            },
           ),
           NavItem(
             icon: Icons.person_outline,
             label: 'Profile',
-            onTap: () => Navigator.pushReplacementNamed(context, '/profile'),
+            isActive: currentRoute == '/profile',
+            onTap: () {
+              if (currentRoute != '/profile') {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }
+            },
           ),
         ],
       ),
@@ -40,33 +57,52 @@ class NavItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
+  final bool isActive;
 
   const NavItem({
     super.key,
     required this.icon,
     required this.label,
     this.onTap,
+    this.isActive = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.black),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontFamily: 'Instrument Sans',
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: BackdropFilter(
+          filter:
+              isActive
+                  ? ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0)
+                  : ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color:
+                  isActive ? Colors.white.withOpacity(0.2) : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: isActive ? Colors.white : Colors.black),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: isActive ? Colors.white : Colors.black,
+                    fontFamily: 'Instrument Sans',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
