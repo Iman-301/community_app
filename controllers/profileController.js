@@ -96,3 +96,25 @@ exports.updateProfilePicture = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+exports.deleteProfile = async (req, res) => {
+  try {
+    // Find and delete the user
+    const deletedUser = await User.findByIdAndDelete(req.userId);
+    
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Simple cleanup - just delete profile picture if exists
+    if (deletedUser.profilePicture) {
+      const picturePath = path.join(__dirname, '../public', deletedUser.profilePicture);
+      if (fs.existsSync(picturePath)) {
+        fs.unlinkSync(picturePath);
+      }
+    }
+
+    res.json({ message: 'Profile deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
