@@ -7,7 +7,7 @@ import 'package:iddir_app/features/profile/presentation/screens/profile_page.dar
 import 'package:iddir_app/features/auth/presentation/screens/signin_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signup_page.dart';
 import 'package:iddir_app/features/profile/presentation/screens/profile_form_page.dart';
-import 'package:iddir_app/member_management_detail_page.dart';
+import 'package:iddir_app/features/users/presentation/screens/member_management_detail_page.dart';
 import 'package:iddir_app/onboarding_page.dart';
 import 'package:iddir_app/otp_verification_page.dart';
 import 'package:iddir_app/service_request_page.dart';

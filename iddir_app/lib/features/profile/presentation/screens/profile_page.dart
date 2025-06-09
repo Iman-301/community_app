@@ -286,6 +286,91 @@ class DebugGestureDetector extends StatelessWidget {
 class SettingsContainer extends ConsumerWidget {
   const SettingsContainer({super.key});
 
+  Future<void> _handleDeleteAccount(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text(
+          'Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.',
+          style: TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Delete Account'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      try {
+        // Show loading indicator
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+
+        // Attempt to delete account
+        final success = await ref.read(profileProvider.notifier).deleteAccount();
+
+        // Close loading indicator
+        if (context.mounted) {
+          Navigator.pop(context); // Close loading dialog
+        }
+
+        if (success) {
+          // Show success message and navigate to login
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Account deleted successfully'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // Navigate to login page and clear navigation stack
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/onboarding',  
+              (route) => false,
+            );
+          }
+        } else {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Failed to delete account. Please try again.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        // Close loading indicator if it's still showing
+        if (context.mounted) {
+          Navigator.pop(context); // Close loading dialog
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
@@ -362,30 +447,15 @@ class SettingsContainer extends ConsumerWidget {
 
           // Delete Account Row
           DebugGestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Delete Account'),
-                  content: const Text('Are you sure? This cannot be undone.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: const SizedBox(
+            onTap: () => _handleDeleteAccount(context, ref),
+            child: Container(
               width: double.infinity,
-              child: Row(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                // border: Border.all(color: Colors.red.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
                 children: [
                   Icon(Icons.delete_outline, color: Colors.red),
                   SizedBox(width: 12),
@@ -393,7 +463,7 @@ class SettingsContainer extends ConsumerWidget {
                     'Delete account',
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                       fontSize: 14,
                       height: 20 / 14,
                       letterSpacing: 0.25,
