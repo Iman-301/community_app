@@ -1,9 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iddir_app/core/widgets/button.dart';
-import 'package:iddir_app/features/auth/presentation/screens/signin_page.dart';
+import 'package:iddir_app/core/widgets/custom_textfield.dart';
 
-class ServiceRequestPage extends StatelessWidget {
+import '../providers/request_provider.dart';
+
+class ServiceRequestPage extends ConsumerStatefulWidget {
   const ServiceRequestPage({super.key});
+
+  @override
+  ConsumerState<ServiceRequestPage> createState() => _ServiceRequestPageState();
+}
+
+class _ServiceRequestPageState extends ConsumerState<ServiceRequestPage> {
+  final _nameController = TextEditingController();
+  final _eventTypeController = TextEditingController();
+  final _amountController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _eventTypeController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  void _submitRequest() async {
+    final data = {
+      'name': _nameController.text,
+      'eventType': _eventTypeController.text,
+      'amount': double.tryParse(_amountController.text) ?? 0,
+    };
+
+    final success = await ref.read(requestProvider.notifier).createRequest(data);
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Request submitted successfully')),
+      );
+      _nameController.clear();
+      _eventTypeController.clear();
+      _amountController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to submit request')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,26 +55,25 @@ class ServiceRequestPage extends StatelessWidget {
           children: [
             const CurvedHeader(),
             const SizedBox(height: 25),
-
-            const CustomTextField(
+            CustomTextField(
+              controller: _nameController,
               labelText: 'Name:',
               placeholder: 'Enter name..',
             ),
             const SizedBox(height: 20),
-
-            const CustomTextField(
+            CustomTextField(
+              controller: _eventTypeController,
               labelText: 'Type:',
               placeholder: 'Type event..',
             ),
             const SizedBox(height: 20),
-
-            const CustomTextField(
+            CustomTextField(
+              controller: _amountController,
               labelText: 'Amount:',
               placeholder: 'Amount requested..',
+              // keyboardType: TextInputType.number,
             ),
-
             const SizedBox(height: 40),
-
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: Row(
@@ -40,20 +81,18 @@ class ServiceRequestPage extends StatelessWidget {
                 children: [
                   CustomButton(
                     label: 'Back',
-                    onPressed: () => {
-                      Navigator.pushNamed(context, '/announcement'),
-                    },
+                    onPressed: () => Navigator.pushNamed(context, '/announcement'),
                     aspectRatioVal: 2,
                     border: true,
                     lablefont: 16,
                   ),
                   CustomButton(
                     label: 'Submit',
-                    onPressed: () => {},
+                    onPressed: _submitRequest,
                     aspectRatioVal: 2,
                     backgroundColor: const Color(0xFF08B9AF),
                     lablefont: 16,
-                  ), // Teal-ish color from image
+                  ),
                 ],
               ),
             ),
@@ -72,16 +111,17 @@ class CurvedHeader extends StatelessWidget {
     return ClipPath(
       clipper: TopCurveClipper(),
       child: Container(
-        height: 200, // Adjust as needed
-        color: const Color(0xFFEBF0F0), // Teal-ish color from image
+        height: 200,
+        color: const Color(0xFFEBF0F0),
         child: Padding(
           padding: const EdgeInsets.only(top: 50, left: 16),
           child: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/announcement'),
             child: Row(
-              children: [
-                const Icon(Icons.arrow_back, color: Colors.black, size: 28),
-                const SizedBox(width: 12),
-                const Text(
+              children: const [
+                Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                SizedBox(width: 12),
+                Text(
                   'Service Request',
                   style: TextStyle(
                     fontFamily: 'Instrument Sans',
@@ -92,9 +132,6 @@ class CurvedHeader extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: () {
-              Navigator.pushNamed(context, '/announcement');
-            },
           ),
         ),
       ),
@@ -106,27 +143,21 @@ class TopCurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-
-    path.lineTo(0, size.height - 40); // Start down from top-left
-
-    // Make the curve start lower and rise to the right side
+    path.lineTo(0, size.height - 40);
     path.quadraticBezierTo(
       size.width * 0.05,
-      size.height + 20, // Control point (swollen left)
+      size.height + 20,
       size.width * 0.5,
-      size.height - 10, // Mid point (smoother center)
+      size.height - 10,
     );
-
     path.quadraticBezierTo(
       size.width * 0.95,
-      size.height - 50, // Control point (gentle right)
+      size.height - 50,
       size.width,
-      size.height - 20, // End at top-right
+      size.height - 20,
     );
-
-    path.lineTo(size.width, 0); // Top-right corner
+    path.lineTo(size.width, 0);
     path.close();
-
     return path;
   }
 

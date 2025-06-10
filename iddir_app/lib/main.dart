@@ -7,13 +7,15 @@ import 'package:iddir_app/features/profile/presentation/screens/profile_page.dar
 import 'package:iddir_app/features/auth/presentation/screens/signin_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signup_page.dart';
 import 'package:iddir_app/features/profile/presentation/screens/profile_form_page.dart';
+import 'package:iddir_app/features/request/presentation/screens/event_approval_page.dart';
+import 'package:iddir_app/features/request/presentation/screens/service_request_page.dart';
 import 'package:iddir_app/features/users/presentation/screens/member_management_detail_page.dart';
 import 'package:iddir_app/onboarding_page.dart';
 import 'package:iddir_app/otp_verification_page.dart';
-import 'package:iddir_app/service_request_page.dart';
+
 import 'package:iddir_app/splash_screen.dart';
 import 'package:iddir_app/financial_management_page.dart';
-import 'package:iddir_app/event_approval_page.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iddir_app/core/providers/shared_preferences_provider.dart';
 // import 'package:iddir_app/features/auth/presentation/providers/auth_provider.dart' as auth;

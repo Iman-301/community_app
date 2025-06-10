@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iddir_app/core/widgets/admin_bottom_navbar.dart';
+import 'package:iddir_app/features/request/data/model/request_model.dart';
+import '../providers/request_provider.dart';
 
-class EventApprovalPage extends StatelessWidget {
+class EventApprovalPage extends ConsumerStatefulWidget {
   const EventApprovalPage({super.key});
 
   @override
+  ConsumerState<EventApprovalPage> createState() => _EventApprovalPageState();
+}
+
+class _EventApprovalPageState extends ConsumerState<EventApprovalPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch requests when the page loads
+    Future.microtask(() =>
+      ref.read(requestProvider.notifier).getAllRequests()
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final requestsAsync = ref.watch(requestProvider);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -13,43 +32,60 @@ class EventApprovalPage extends StatelessWidget {
             const CurvedHeader(),
             const SizedBox(height: 20),
             Padding(
-              padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                CustomApprovalCard(
-                  name: 'Besufekad Tadesse',
-                  service: 'Funeral Service',
-                  amount: 'ETB 5,000',
-                  showButtons: true,
+              padding: const EdgeInsets.all(20),
+              child: requestsAsync.when(
+                data: (requests) => Column(
+                  children: requests
+                      .where((r) => r.status != 'rejected') // Hide rejected
+                      .map((request) => Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: CustomApprovalCard(
+                              request: request,
+                              showButtons: request.status == 'pending',
+                              onApprove: () async {
+                                final success = await ref
+                                    .read(requestProvider.notifier)
+                                    .updateRequestStatus(request.id, 'approved');
+                                if (success) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Request approved')),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Failed to approve request')),
+                                  );
+                                }
+                              },
+                              onReject: () async {
+                                final success = await ref
+                                    .read(requestProvider.notifier)
+                                    .updateRequestStatus(request.id, 'rejected');
+                                if (success) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Request rejected')),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Failed to reject request')),
+                                  );
+                                }
+                              },
+                            ),
+                          ))
+                      .toList(),
                 ),
-                SizedBox(height: 20),
-                CustomApprovalCard(
-                  name: 'Selam Fekadu',
-                  service: 'Wedding Service',
-                  amount: 'ETB 5,000',
-                  showButtons: true,
-                ),
-                SizedBox(height: 20),
-                CustomApprovalCard(
-                  name: 'Besufekad Tadesse',
-                  service: 'Funeral Service',
-                  amount: 'ETB 5,000',
-                  showButtons: false,
-                ),
-                SizedBox(height: 20),
-                CustomApprovalCard(
-                  name: 'Selam Fekadu',
-                  service: 'Wedding Service',
-                  amount: 'ETB 5,000',
-                  showButtons: false,
-                ),
-              ],
-            ),)
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => Center(child: Text('Error: $error')),
+              ),
+            ),
           ],
         ),
       ),
-
-      bottomNavigationBar: AdminBottomNavBar(),
+      bottomNavigationBar: const AdminBottomNavBar(),
     );
   }
 }
@@ -62,15 +98,15 @@ class CurvedHeader extends StatelessWidget {
     return ClipPath(
       clipper: TopCurveClipper(),
       child: Container(
-        height: 200, // Adjust as needed
-        color: const Color(0xFFEBF0F0), // Teal-ish color from image
+        height: 200,
+        color: const Color(0xFFEBF0F0),
         child: Padding(
           padding: const EdgeInsets.only(top: 50, left: 16),
           child: Row(
-            children: [
-              const Icon(Icons.arrow_back, color: Colors.black, size: 28),
-              const SizedBox(width: 12),
-              const Text(
+            children: const [
+              Icon(Icons.arrow_back, color: Colors.black, size: 28),
+              SizedBox(width: 12),
+              Text(
                 'Event Request',
                 style: TextStyle(
                   fontFamily: 'Instrument Sans',
@@ -91,27 +127,21 @@ class TopCurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-
-    path.lineTo(0, size.height - 40); // Start down from top-left
-
-    // Make the curve start lower and rise to the right side
+    path.lineTo(0, size.height - 40);
     path.quadraticBezierTo(
       size.width * 0.05,
-      size.height + 20, // Control point (swollen left)
+      size.height + 20,
       size.width * 0.5,
-      size.height - 10, // Mid point (smoother center)
+      size.height - 10,
     );
-
     path.quadraticBezierTo(
       size.width * 0.95,
-      size.height - 50, // Control point (gentle right)
+      size.height - 50,
       size.width,
-      size.height - 20, // End at top-right
+      size.height - 20,
     );
-
-    path.lineTo(size.width, 0); // Top-right corner
+    path.lineTo(size.width, 0);
     path.close();
-
     return path;
   }
 
@@ -120,17 +150,17 @@ class TopCurveClipper extends CustomClipper<Path> {
 }
 
 class CustomApprovalCard extends StatelessWidget {
-  final String name;
-  final String service;
-  final String amount;
+  final RequestModel request;
   final bool showButtons;
+  final VoidCallback? onApprove;
+  final VoidCallback? onReject;
 
   const CustomApprovalCard({
     super.key,
-    required this.name,
-    required this.service,
-    required this.amount,
+    required this.request,
     this.showButtons = true,
+    this.onApprove,
+    this.onReject,
   });
 
   @override
@@ -143,7 +173,7 @@ class CustomApprovalCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [
           BoxShadow(
-            color: Color.fromARGB(102, 116, 114, 114), // #00000040
+            color: Color.fromARGB(102, 116, 114, 114),
             blurRadius: 10,
             offset: Offset(0, 0),
           ),
@@ -153,34 +183,31 @@ class CustomApprovalCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            name,
+            request.name,
             style: const TextStyle(
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w600,
               fontSize: 24,
-              height: 1.0,
               color: Colors.black,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            service,
+            request.eventType,
             style: const TextStyle(
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w400,
               fontSize: 20,
-              height: 1.0,
               color: Colors.black,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            amount,
+            'ETB ${request.amount}',
             style: const TextStyle(
               fontFamily: 'Instrument Sans',
               fontWeight: FontWeight.w400,
               fontSize: 20,
-              height: 1.0,
               color: Colors.black,
             ),
           ),
@@ -193,7 +220,7 @@ class CustomApprovalCard extends StatelessWidget {
                   width: 146,
                   height: 36,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onApprove,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF08B9AF),
                       shape: RoundedRectangleBorder(
@@ -215,7 +242,7 @@ class CustomApprovalCard extends StatelessWidget {
                   width: 146,
                   height: 36,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onReject,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00524D),
                       shape: RoundedRectangleBorder(

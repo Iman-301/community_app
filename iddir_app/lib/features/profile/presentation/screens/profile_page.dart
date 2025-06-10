@@ -505,6 +505,9 @@ class SettingsContainer extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(height: 20),
+          
+          
         ],
       ),
     );
