@@ -72,7 +72,7 @@ class ProfileRemoteDatasource {
       throw 'Failed to update profile picture: ${e.message}';
     } catch (e) {
       print('Unexpected error: $e');
-      throw 'An unexpected error occurred';
+      rethrow;
     }
   }
 
