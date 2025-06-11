@@ -5,6 +5,7 @@ import 'package:iddir_app/core/widgets/bottom_navbar.dart';
 import 'package:iddir_app/features/profile/data/models/profile_model.dart';
 import 'package:iddir_app/features/profile/presentation/providers/profile_provider.dart';
 import 'package:iddir_app/features/profile/presentation/screens/profile_form_page.dart';
+import 'package:iddir_app/features/payment/presentation/screens/payment_upload_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -389,6 +390,38 @@ class SettingsContainer extends ConsumerWidget {
       ),
       child: Column(
         children: [
+          // Payment Row (Add this new section)
+          DebugGestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PaymentUploadPage()),
+              );
+            },
+            child: const SizedBox(
+              width: double.infinity,
+              child: Row(
+                children: [
+                  Icon(Icons.payment_outlined, color: Colors.black),
+                  SizedBox(width: 12),
+                  Text(
+                    'Payment & Receipts',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      height: 20 / 14,
+                      letterSpacing: 0.25,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
           // Edit Profile Row
           DebugGestureDetector(
             onTap: () {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iddir_app/features/announcement/presentation/screens/add_announcement_page.dart';
 import 'package:iddir_app/features/announcement/presentation/screens/admin_announcements_page.dart';
 import 'package:iddir_app/features/announcement/presentation/screens/announcement_page.dart';
+import 'package:iddir_app/features/payment/presentation/screens/financial_management_page.dart';
 import 'package:iddir_app/features/profile/presentation/screens/profile_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signin_page.dart';
 import 'package:iddir_app/features/auth/presentation/screens/signup_page.dart';
@@ -14,7 +15,6 @@ import 'package:iddir_app/onboarding_page.dart';
 import 'package:iddir_app/otp_verification_page.dart';
 
 import 'package:iddir_app/splash_screen.dart';
-import 'package:iddir_app/financial_management_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iddir_app/core/providers/shared_preferences_provider.dart';
